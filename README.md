@@ -2,40 +2,20 @@
 
 Quick instructions:
 
-```bash
-CID=$(docker run -d --privileged -p 1194:1194/udp -p 443:443/tcp jpetazzo/dockvpn)
-docker run -t -i -p 8080:8080 --volumes-from $CID jpetazzo/dockvpn serveconfig
+```
+docker-compose up -d
 ```
 
-Now download the file located at the indicated URL. You will get a
-certificate warning, since the connection is done over SSL, but we are
-using a self-signed certificate. After downloading the configuration,
-stop the `serveconfig` container. You can restart it later if you need
-to re-download the configuration, or to download it to multiple devices.
+Once provisioned, navigate to `http://<Your IP>:10889` to access a single-use download of your OpenVPN config. It will only be available for a single download, requiring that OpenVPN be re-deployed (and thus, re-keyed and new certs generated).
 
-The file can be used immediately as an OpenVPN profile. It embeds all the
-required configuration and credentials. It has been tested successfully on
-Linux, Windows, and Android clients. If you can test it on OS X and iPhone,
-let me know!
+## Using this setup with DigitalOcean
+### or any provider supporting provisioning scripts
 
-**Note:** there is a [bug in the Android Download Manager](
-http://code.google.com/p/android/issues/detail?id=3492) which prevents
-downloading files from untrusted SSL servers; and in that case, our
-self-signed certificate means that our server is untrusted. If you
-try to download with the default browser on your Android device,
-it will show the download as "in progress" but it will remain stuck.
-You can download it with Firefox; or you can transfer it with another
-way: Dropbox, USB, micro-SD card...
-
-If you reboot the server (or stop the container) and you `docker run`
-again, you will create a new service (with a new configuration) and
-you will have to re-download the configuration file. However, you can
-use `docker start` to restart the service without touching the configuration.
-
+To use this configuration with a provider such as <a href="https://digitalocean.com">DigitalOcean</a>, use `provision.sh` in your user-data field when you <a href="https://www.digitalocean.com/community/tutorials/an-introduction-to-droplet-metadata">create a new droplet.</a>
 
 ## How does it work?
 
-When the `jpetazzo/dockvpn` image is started, it generates:
+When the `dockvpn` image is started, it generates:
 
 - Diffie-Hellman parameters,
 - a private key,
@@ -49,10 +29,15 @@ on 443/tcp).
 The configuration is located in `/etc/openvpn`, and the Dockerfile
 declares that directory as a volume. It means that you can start another
 container with the `--volumes-from` flag, and access the configuration.
-Conveniently, `jpetazzo/dockvpn` comes with a script called `serveconfig`,
+Conveniently, the modified `dockvpn` image comes with a script called `serveconfig`,
 which starts a pseudo HTTPS server on `8080/tcp`. The pseudo server
 does not even check the HTTP request; it just sends the HTTP status line,
 headers, and body right away.
+
+Because this interface is only exposed to the Docker network, and is configured (by design) to terminate
+after serving a single request (ensuring that you are aware if, either, someone has already accessed and downloaded your config, and that you can act if your config is unavailable), it is only accessible to the `vpn-config-ui` container, which will serve 
+a single copy of your config to you at `http://<Server IP Address>:10889`. All subsequent requests will fail to download, as
+`serveconfig` will have been terminated. 
 
 
 ## OpenVPN details
@@ -82,8 +67,8 @@ For simplicity, the client and the server use the same private key and
 certificate. This is certainly a terrible idea. If someone can get their
 hands on the configuration on one of your clients, they will be able to
 connect to your VPN, and you will have to generate new keys. Which is,
-by the way, extremely easy, since each time you `docker run` the OpenVPN
-image, a new key is created. If someone steals your configuration file
+by the way, extremely easy, since each time you `docker-compose` the OpenVPN
+compose file, a new key is created. If someone steals your configuration file
 (and key), they will also be able to impersonate the VPN server (if they
 can also somehow hijack your connection).
 
@@ -101,7 +86,7 @@ keys.
 
 People have successfully used this VPN server with clients such as:
 
-- OpenVPN on Linux,
+- OpenVPN on Linux, (*Note*: `sudo openvpn client.ovpn` will run this configuration)
 - Viscosity on OSX (#25),
 - Tunnelblick on OSX,
 - (some VPN client on Android but I can't remember which).
