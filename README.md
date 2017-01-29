@@ -1,5 +1,7 @@
 # OpenVPN for Docker
 
+Based on [jpetazzo/dockvpn](https://github.com/jpetazzo/dockvpn). 
+
 Quick instructions:
 
 ```
@@ -96,4 +98,6 @@ People have successfully used this VPN server with clients such as:
 
 - @besn0847/[alpinevpn](https://github.com/besn0847/alpinevpn), a smaller
   image based on the Alpine distribution
+
+- The obvious inspiration for my interest in this [jpetazzo/dockvpn](https://github.com/jpetazzo/dockvpn)
   
