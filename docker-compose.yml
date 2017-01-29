@@ -1,13 +1,15 @@
 version: '2'
 services:
   dockvpn:
-    image: registry.boulder.gourmet.yoga/dockvpn
+    build: ./DockVPN
+    image: dockvpn
     privileged: true
     ports:
       - "443:443"
       - "1194:1194"
   serveconfig:
-    image: registry.boulder.gourmet.yoga/dockvpn
+    build: ./DockVPN
+    image: dockvpn
     depends_on:
       - dockvpn
     volumes_from:
@@ -16,7 +18,8 @@ services:
       - dockvpn
     entrypoint: serveconfig
   config-ui:
-    image: local/vpn-config-ui
+    build: ./UI
+    image: quay.io/jmarhee/vpn-config-ui
     links: 
       - dockvpn
       - serveconfig
