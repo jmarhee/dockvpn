@@ -1,0 +1,28 @@
+version: '2'
+services:
+  dockvpn:
+    image: registry.boulder.gourmet.yoga/dockvpn
+    privileged: true
+    ports:
+      - "443:443"
+      - "1194:1194"
+  serveconfig:
+    image: registry.boulder.gourmet.yoga/dockvpn
+    depends_on:
+      - dockvpn
+    volumes_from:
+      - dockvpn
+    links:
+      - dockvpn
+    entrypoint: serveconfig
+  config-ui:
+    image: local/vpn-config-ui
+    links: 
+      - dockvpn
+      - serveconfig
+    depends_on:
+      - dockvpn
+    ports:
+      - "8880:4567"
+
+

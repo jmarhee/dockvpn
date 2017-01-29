@@ -30,8 +30,8 @@ dh dh.pem
 keepalive 10 60
 persist-key
 persist-tun
-push "dhcp-option DNS 8.8.8.8"
-push "dhcp-option DNS 8.8.4.4"
+push        "dhcp-option DNS 84.200.69.80"
+push        "dhcp-option DNS 84.200.70.40"
 
 proto tcp-server
 port 443
@@ -50,8 +50,8 @@ dh dh.pem
 keepalive 10 60
 persist-key
 persist-tun
-push "dhcp-option DNS 8.8.8.8"
-push "dhcp-option DNS 8.8.4.4"
+push        "dhcp-option DNS 84.200.69.80"
+push        "dhcp-option DNS 84.200.70.40"
 
 proto udp
 port 1194
@@ -108,3 +108,4 @@ touch tcp443.log udp1194.log http8080.log
 while true ; do openvpn tcp443.conf ; done >> tcp443.log &
 while true ; do openvpn udp1194.conf ; done >> udp1194.log &
 tail -F *.log
+
