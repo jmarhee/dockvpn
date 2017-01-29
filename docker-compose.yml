@@ -26,6 +26,6 @@ services:
     depends_on:
       - dockvpn
     ports:
-      - "8880:4567"
+      - "8889:4567"
 
 
