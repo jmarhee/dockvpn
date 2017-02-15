@@ -19,7 +19,7 @@ services:
     entrypoint: serveconfig
   config-ui:
     build: ./UI
-    image: quay.io/jmarhee/vpn-config-ui
+    image: vpn-config-ui
     links: 
       - dockvpn
       - serveconfig
