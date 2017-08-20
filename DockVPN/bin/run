@@ -20,7 +20,9 @@ chmod 600 key.pem
     openssl x509 -req -in csr.pem -out cert.pem -signkey key.pem -days 24855
 
 [ -f tcp443.conf ] || cat >tcp443.conf <<EOF
+tun-ipv6
 server 192.168.255.0 255.255.255.128
+server-ipv6 2001:412:abcd:2::/64
 verb 3
 duplicate-cn
 key key.pem
@@ -32,6 +34,8 @@ persist-key
 persist-tun
 push        "dhcp-option DNS 84.200.69.80"
 push        "dhcp-option DNS 84.200.70.40"
+push        "dhcp-option DNS 2001:1608:10:25::1c04:b12f"
+push        "dhcp-option DNS 2001:1608:10:25::9249:d69b"
 
 proto tcp-server
 port 443
@@ -52,6 +56,8 @@ persist-key
 persist-tun
 push        "dhcp-option DNS 84.200.69.80"
 push        "dhcp-option DNS 84.200.70.40"
+push        "dhcp-option DNS 2001:1608:10:25::1c04:b12f"
+push        "dhcp-option DNS 2001:1608:10:25::9249:d69b"
 
 proto udp
 port 1194
@@ -70,6 +76,7 @@ MY_IP_ADDR=$(curl -s http://myip.enix.org/REMOTE_ADDR)
 client
 nobind
 dev tun
+tun-ipv6
 redirect-gateway def1
 
 <key>
