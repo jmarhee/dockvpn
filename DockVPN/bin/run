@@ -67,18 +67,18 @@ status openvpn-status-1194.log
 EOF
 
 MY_IPV4_ADDR=$(curl -s https://ipv4.icanhazip.com)
-[ "$MY_IP_ADDR" ] || {
-    echo "Sorry, I could not figure out my public IP address."
-    echo "(I use http://myip.enix.org/REMOTE_ADDR/ for that purpose.)"
-    exit 1
-}
+# [ "$MY_IP_ADDR" ] || {
+#     echo "Sorry, I could not figure out my public IP address."
+#     echo "(I use http://myip.enix.org/REMOTE_ADDR/ for that purpose.)"
+#     exit 1
+# }
 
 MY_IPV6_ADDR=$(curl -s https://ipv6.icanhazip.com)
-[ "$MY_IP_ADDR" ] || {
-    echo "Sorry, I could not figure out my public IP address."
-    echo "(I use http://myip.enix.org/REMOTE_ADDR/ for that purpose.)"
-    exit 1
-}
+# [ "$MY_IP_ADDR" ] || {
+#     echo "Sorry, I could not figure out my public IP address."
+#     echo "(I use http://myip.enix.org/REMOTE_ADDR/ for that purpose.)"
+#     exit 1
+# }
 
 [ -f client.ovpn ] || cat >client.ovpn <<EOF
 client
@@ -126,7 +126,7 @@ Content-Length: `wc -c client.ovpn`
 EOF
 
 iptables -t nat -A POSTROUTING -s 192.168.255.0/24 -o eth0 -j MASQUERADE
-# ip6tables -t nat -A POSTROUTING -s 2001:db8:1::/64 -o eth0 -j MASQUERADE
+ip6tables -t nat -A POSTROUTING -s 2001:db8:1::/64 -o eth0 -j MASQUERADE
 
 touch tcp443.log udp1194.log http8080.log
 while true ; do openvpn tcp443.conf ; done >> tcp443.log &
