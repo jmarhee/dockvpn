@@ -102,11 +102,17 @@ redirect-gateway def1
 
 <connection>
 remote $MY_IPV4_ADDR 1194 udp
+</connection>
+
+<connection>
 remote $MY_IPV6_ADDR 1194 udp
 </connection>
 
 <connection>
 remote $MY_IPV4_ADDR 443 tcp-client
+</connection>
+
+<connection>
 remote $MY_IPV6_ADDR 443 tcp-client
 </connection>
 EOF
@@ -120,7 +126,7 @@ Content-Length: `wc -c client.ovpn`
 EOF
 
 iptables -t nat -A POSTROUTING -s 192.168.255.0/24 -o eth0 -j MASQUERADE
-ip6tables -t nat -A POSTROUTING -s 2001:db8:1::/64 -o eth0 -j MASQUERADE
+# ip6tables -t nat -A POSTROUTING -s 2001:db8:1::/64 -o eth0 -j MASQUERADE
 
 touch tcp443.log udp1194.log http8080.log
 while true ; do openvpn tcp443.conf ; done >> tcp443.log &
