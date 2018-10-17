@@ -3,6 +3,7 @@ services:
   dockvpn:
     build: ./DockVPN
     image: dockvpn
+    container_name: dockvpn
     privileged: true
     ports:
       - "443:443"
@@ -10,6 +11,7 @@ services:
   serveconfig:
     build: ./DockVPN
     image: dockvpn
+    container_name: serveconfig
     depends_on:
       - dockvpn
     volumes_from:
@@ -20,6 +22,7 @@ services:
   config-ui:
     build: ./UI
     image: vpn-config-ui
+    container_name: config-ui
     links: 
       - dockvpn
       - serveconfig

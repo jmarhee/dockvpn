@@ -7,7 +7,7 @@ get "/" do
 end
 
 get "/config" do
-	response = HTTParty.get("http://dockvpn_serveconfig_1:8080")
+	response = HTTParty.get("http://serveconfig:8080")
     tempfile = Tempfile.new('client.ovpn')
     File.open(tempfile.path,'w') do |f|
        f.write response.body
