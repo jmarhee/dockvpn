@@ -2,16 +2,8 @@
 
 function docker_installation() {
 	if ! type "docker" > /dev/null; then
-  		    apt-key fingerprint 0EBFCD88
-
-                    add-apt-repository \
-                    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-                    $(lsb_release -cs) \
-    	            stable"
-    
 		    apt-get update && \
-		    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    		    apt-get install -y docker-ce docker-ce-cli containerd.io
+    		    apt-get install -y docker.io
 	fi
 }
 
