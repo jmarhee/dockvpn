@@ -1,13 +1,13 @@
 #!/bin/bash
 
-function install_pkgs() {
-    apt-key fingerprint 0EBFCD88
+function docker_installation() {
+	if ! type "docker" > /dev/null; then
+		    apt-get update && \
+    		    apt-get install -y docker.io
+	fi
+}
 
-    add-apt-repository \
-    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-    $(lsb_release -cs) \
-    stable"
-    
+function install_pkgs() {
     apt-get update && \
     apt-get install -y git-core \
     apt-transport-https \
@@ -15,10 +15,6 @@ function install_pkgs() {
     curl \
     gnupg-agent \
     software-properties-common
-
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-    apt-get install -y docker-ce docker-ce-cli containerd.io
 }
 
 function install_compose() {
@@ -32,4 +28,4 @@ function deploy_vpn() {
     docker-compose up -d
 }
 
-install_pkgs && install_compose && deploy_vpn
+install_pkgs && docker_installation && install_compose && deploy_vpn
