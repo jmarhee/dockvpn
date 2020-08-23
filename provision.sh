@@ -23,7 +23,7 @@ function install_compose() {
 }
 
 function deploy_vpn() {
-    git clone https://gitlab.com/jmarhee/dockvpn.git && \
+    git clone https://github.com/jmarhee/dockvpn.git && \
     cd dockvpn && \
     docker-compose up -d
 }
