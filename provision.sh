@@ -14,7 +14,8 @@ function install_pkgs() {
     ca-certificates \
     curl \
     gnupg-agent \
-    software-properties-common
+    software-properties-common \
+    docker.io
 }
 
 function install_compose() {
