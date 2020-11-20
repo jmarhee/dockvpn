@@ -9,6 +9,9 @@ set -e
 cd /etc/openvpn
 # This file tells `serveconfig` that there is a config there
 touch placeholder
+
+rm dh.pem key.pem csr.pem cert.pem
+
 [ -f dh.pem ] ||
     openssl dhparam -out dh.pem 1024
 [ -f key.pem ] ||
@@ -18,6 +21,8 @@ chmod 600 key.pem
     openssl req -new -key key.pem -out csr.pem -subj /CN=OpenVPN/
 [ -f cert.pem ] ||
     openssl x509 -req -in csr.pem -out cert.pem -signkey key.pem -days 24855
+
+rm tcp443.conf
 
 [ -f tcp443.conf ] || cat >tcp443.conf <<EOF
 server 192.168.255.0 255.255.255.128
@@ -38,6 +43,8 @@ port 443
 dev tun443
 status openvpn-status-443.log
 EOF
+
+rm udp1194.conf
 
 [ -f udp1194.conf ] || cat >udp1194.conf <<EOF
 server 192.168.255.128 255.255.255.128
@@ -66,6 +73,8 @@ MY_IP_ADDR=$(curl -s http://myip.enix.org/REMOTE_ADDR)
     exit 1
 }
 
+rm client.ovpn
+
 [ -f client.ovpn ] || cat >client.ovpn <<EOF
 client
 nobind
@@ -93,6 +102,8 @@ remote $MY_IP_ADDR 1194 udp
 remote $MY_IP_ADDR 443 tcp-client
 </connection>
 EOF
+
+rm client.http
 
 [ -f client.http ] || cat >client.http <<EOF
 HTTP/1.0 200 OK

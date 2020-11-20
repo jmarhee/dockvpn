@@ -1,15 +1,14 @@
 version: '2'
 services:
   dockvpn:
-    build: ./DockVPN
-    image: dockvpn
+    image: publicengineering/dockvpn
     privileged: true
     ports:
       - "443:443"
       - "1194:1194"
+    entrypoint: run
   serveconfig:
-    build: ./DockVPN
-    image: dockvpn
+    image: publicengineering/dockvpn
     depends_on:
       - dockvpn
     volumes_from:
@@ -18,8 +17,7 @@ services:
       - dockvpn
     entrypoint: serveconfig
   config-ui:
-    build: ./UI
-    image: vpn-config-ui
+    image: publicengineering/vpn-config-ui
     links: 
       - dockvpn
       - serveconfig
